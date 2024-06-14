@@ -13,11 +13,11 @@ const router = express.Router();
 //Router for users
 router.post('/register', registerValidation, registerUser);
 router.post('/login', loginValidation,  authenticateUser)
-router.get('/getoneuser', getOneUser)
+router.get('/getoneuser/:id', getOneUser)
 router.get('/getallusers', getAllUsers)
 router.post('/changepassword/:id', changePasswordValidation, changePassword)
 router.post('/changeusername/:id', changeUsernameValidation, changeUsername)
-router.patch('/forgotpassword/:id', forgotPassword)
+router.patch('/forgotpassword', forgotPassword)
 router.delete('/deleteuser/:id', deleteUser)
 
 //Routes for Recipes 

@@ -21,8 +21,8 @@ const registerUser = async(req,res)=> {
     await newUser.save()
 
     //Send Email 
-    const result = await sendEmail(user.username, user.email,
-                'Account Creation', `Welcome ${user.username}. Your Recipe Account Has Been Created`)
+    const result = await sendEmail(newUser.username, newUser.email,
+                'Account Creation', `Welcome ${newUser.username}. Your Recipe Account Has Been Created`)
     
     return res.status(200).json({
         message: "Account Created Successfully",
@@ -30,7 +30,7 @@ const registerUser = async(req,res)=> {
     })
 }
     catch(error){
-        res.status(400).json({message:error.message})
+      return  res.status(400).json({message:error.message})
     }
 }
 
@@ -63,18 +63,19 @@ const authenticateUser = async(req,res)=> {
         })
     }
     catch(error){
-        res.status(400).json({message:error.message})
+return res.status(400).json({message:error.message})
     }
 }
 
 const getOneUser = async(req,res) =>{ 
+    
     try{
- 
+        const {id} = req.params;
     const user = await Auth.findById(id);
     return res.status(200).json({message:  `${user.username} is here`, user})
 }
     catch(error) {
-        res.status(400).json({message:error.message})
+       return res.status(400).json({message:error.message})
     }
 }
 
@@ -127,7 +128,7 @@ const updatedUsername= await Auth.findByIdAndUpdate(
 )
 
 //Send Email
-const result = await sendEmail(updatedUsername.username, upadatedUsername.email,
+const result = await sendEmail(updatedUsername.username, updatedUsername.email,
                             'Account Change of Username', `Congratulations, your username is now ${updatedUsername.username}`)
 return res.status(200).json({
     message:`Your new username is ${updatedUsername.username}`,
@@ -175,17 +176,14 @@ const deleteUser = async (req, res) => {
     try{
         const {id} = req.params 
        
-        const deletedUser = Auth.findByIdAndDelete(id)
+        const deletedUser = await Auth.findByIdAndDelete(id)
        
-
-        //Send Email
-        const response = await sendEmail(deletedUser.email, deletedUser.username, 'User Deletion', 'Oopss... This user has been deleted from the system')
        
-        res.status(200).json({message:"This user has been successfully deleted"})
+       return res.status(200).json({message:"This user has been successfully deleted"})
 
     }
     catch(error) {
-        res.status(400).json({message:error.message})
+       return res.status(400).json({message:error.message})
     }
 }
 module.exports = {registerUser, authenticateUser, getOneUser, getAllUsers, changePassword, changeUsername, forgotPassword, deleteUser}
