@@ -1,6 +1,6 @@
 const Recipe = require('../Model/recipeSchema');
 
-const sendEmail = require('../utilities')
+const sendEmail = require('../utilities.js')
 
 const handleNewRecipe = async (req, res) => {
     try{
