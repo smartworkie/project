@@ -1,6 +1,6 @@
 //Middleware for Handling Error During Registration
 const registerValidation = async (req, res, next)=> {
-      
+     try{
     const {email, username, password} = req.body
 
     let error = [];
@@ -36,10 +36,14 @@ const registerValidation = async (req, res, next)=> {
             return res.status(400).json({message:error})
     }
     next()
-    
+     }
+     catch(error){
+        return res.status(400).json({message:error.message})
+     }
 }
 //Middleware for Handling Error During Login 
 const loginValidation = async (req, res, next)=> {
+    try{
     const {username, password} = req.body
 
     let error = [];
@@ -56,10 +60,15 @@ const loginValidation = async (req, res, next)=> {
             return res.status(400).json({message:error})
     }
     next()
+    }
+    catch(error){
+        return res.status(400).json({message:error.message})
+    }
     
 }
 //Middleware for Handling Error When Changing Password 
 const changePasswordValidation = (req, res, next)=>{
+    try{
     const {password} = req.body;
     let error = [];
 if (!password){
@@ -83,9 +92,14 @@ if (error.length>0){
         return res.status(400).json({message:error})
 }
 next()
+    }
+    catch(error){
+        return res.status(400).json({message:error.message})
+    }
 }
 //Middleware for Handling Error While Changing Username
 const changeUsernameValidation = (req,res,next) => {
+    try{
     const {username}= req.body;
     let error =[];
     if (!username){
@@ -94,6 +108,10 @@ const changeUsernameValidation = (req,res,next) => {
         error.push("Username should be atleast four letters")
     }
     next();
+}
+catch(error){
+    return res.status(400).json({message:error.message})
+}
 }
 //More Helper Functions
 const isValidEmail= (email)=> { 

@@ -4,7 +4,7 @@ const connectDB = require('./db/dbConnection')
 const dotenv = require('dotenv');
 
 const router = require('./Routes/userRoutes');
-const {registerValidation} = require('./Middleware/middlewareAuth')
+
 
 dotenv.config()
 const app = express()

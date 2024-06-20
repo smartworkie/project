@@ -97,10 +97,10 @@ const changePassword = async(req,res)=>{
     const {id} = req.params
 
     const { password } = req.body
-
+        const hashedPassword = await bcrypt.hash(password, 12)
     const updatedUser = await Auth.findByIdAndUpdate(
         id,
-        { password },
+        { password:hashedPassword },
         {new: true}
     )
 

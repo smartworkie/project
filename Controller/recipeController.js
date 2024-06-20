@@ -1,24 +1,29 @@
 const Recipe = require('../Model/recipeSchema');
-
+const Favorite = require('../Model/favoriteSchema')
 const sendEmail = require('../utilities.js')
 
 const handleNewRecipe = async (req, res) => {
     try{
+        const user = req.user
     const {title, ingredients, instructions, author, tag, created_at} = req.body;
     
     const newRecipe = await new Recipe({title, ingredients, instructions, author, tag, created_at})
         await newRecipe.save();
         
+        //Send Email
+        await sendEmail(user.username, user.email, 'Recipe Creation', `Hurray! A new recipe has been created`)
+
     return res.status(200).json({message:newRecipe})
     }
 
     catch(error) {
-        res.status(400).json({message: error.message})
+     return res.status(400).json({message: error.message})
     }
 }
 
 const handleOneRecipe = async(req,res)=>{
 try{
+    const user = req.user
     const {id} = req.params;
 const oneRecipe = await Recipe.findById(id)
 
@@ -32,6 +37,7 @@ catch(error){
 
 const handleAllRecipes = async(req,res) => {
     try{
+        const user = req.user;
         const allRecipe = await Recipe.find()
 
         res.status(200).json({message: "All recipes are here", allRecipe})
@@ -43,6 +49,7 @@ const handleAllRecipes = async(req,res) => {
 
 const handleUpdateRecipe = async (req, res) => {
     try{
+        const user = req.user
      const {id} = req.params;
     
      const {title, instructions, ingredients, tag, author, created_at}   = req.body;
@@ -61,6 +68,7 @@ const handleUpdateRecipe = async (req, res) => {
 
 const handleDeleteRecipe = async (req, res) => {
     try{
+        const user = req.user
     const {id} = req.params 
         const deleteRecipe = await Recipe.findByIdAndDelete(id);
 
@@ -74,6 +82,7 @@ const handleDeleteRecipe = async (req, res) => {
 // To categorise Recipe (tags)
 const handleCategory = async (req, res) => {
     try{
+        const user = req.user 
         const {tag} = req.body
         const category = await Recipe.find({tag})
 
@@ -84,4 +93,46 @@ const handleCategory = async (req, res) => {
     }
 }
 
-module.exports ={handleNewRecipe, handleOneRecipe, handleAllRecipes, handleUpdateRecipe, handleDeleteRecipe, handleCategory}
+
+// To add favorite recipes 
+
+const handleFavorite = async(req, res)=>{
+   
+    try{
+        const user = req.user
+        const {id} = req.params;
+       
+        favoriteRecipe = await Recipe.findById(id)
+        
+        const favorite = []
+        favorite.push(favoriteRecipe);
+       const existingFavorite = await Favorite.findOne({favorite})
+       console.log(existingFavorite)
+       if(existingFavorite){
+        return res.status(400).json({message:`This recipe is already a favorite. Pick another`})
+       }
+        const newFavorite = await new Favorite({favorite})
+        await newFavorite.save()
+        
+        return res.status(200).json({message:`It is now a favorite ${newFavorite}`});
+    }
+    catch(error){
+        return res.status(401).json({message: error.message})
+    }
+}
+
+//to get all favorites 
+const handleAllFavorites = async(req, res)=> {
+    try{
+    const user = req.user
+        const allFavorites = await Favorite.find()
+        return res.status(200).json({message: `All favorite recipes are here ${allFavorites}`})
+    }
+    catch(error){
+        return res.status(400).json({message:error.message})
+    }
+}
+
+
+module.exports ={handleNewRecipe, handleOneRecipe, handleAllRecipes, handleUpdateRecipe, 
+    handleDeleteRecipe, handleCategory, handleFavorite, handleAllFavorites}

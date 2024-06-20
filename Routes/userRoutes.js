@@ -1,12 +1,11 @@
 const express = require('express');
 const {registerUser, authenticateUser, getOneUser, getAllUsers, changePassword, changeUsername, forgotPassword, deleteUser} = require ('../Controller/authController')
-const {handleNewRecipe, handleOneRecipe, handleAllRecipes, handleUpdateRecipe, handleDeleteRecipe, handleCategory} = require('../Controller/recipeController')
+const {handleNewRecipe, handleOneRecipe, handleAllRecipes, 
+    handleUpdateRecipe, handleDeleteRecipe, handleCategory, handleFavorite, handleAllFavorites} = require('../Controller/recipeController')
 
 const {registerValidation, loginValidation, changePasswordValidation
     ,changeUsernameValidation} = require('../Middleware/middlewareAuth')
-const recipeValidation = require('../Middleware/middlewareRecipe')
-
-
+const {recipeValidation, recipeAuthorization} = require('../Middleware/middlewareRecipe')
 
 const router = express.Router();
 
@@ -21,12 +20,15 @@ router.patch('/forgotpassword', forgotPassword)
 router.delete('/deleteuser/:id', deleteUser)
 
 //Routes for Recipes 
-router.post('/newrecipe', recipeValidation, handleNewRecipe);
-router.get('/onerecipe/:id', handleOneRecipe );
-router.get('/allrecipes', handleAllRecipes);
-router.post('/updaterecipe/:id', handleUpdateRecipe)
-router.delete('/deleterecipe/:id', handleDeleteRecipe)
-router.post('/category', handleCategory)
+router.post('/newrecipe', recipeValidation, recipeAuthorization, handleNewRecipe);
+router.get('/onerecipe/:id', recipeAuthorization, handleOneRecipe );
+router.get('/allrecipes',  recipeAuthorization, handleAllRecipes);
+router.post('/updaterecipe/:id', recipeAuthorization, handleUpdateRecipe)
+router.delete('/deleterecipe/:id', recipeAuthorization, handleDeleteRecipe)
+router.post('/category', recipeAuthorization, handleCategory)
+router.post('/favorite/:id', recipeAuthorization, handleFavorite)
+router.get('/allfavorites', recipeAuthorization, handleAllFavorites)
+
 
 module.exports = router;
 
