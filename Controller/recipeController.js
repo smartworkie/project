@@ -5,6 +5,7 @@ const sendEmail = require('../utilities.js')
 const handleNewRecipe = async (req, res) => {
     try{
         const user = req.user
+        
     const {title, ingredients, instructions, author, tag, created_at} = req.body;
     
     const newRecipe = await new Recipe({title, ingredients, instructions, author, tag, created_at})
