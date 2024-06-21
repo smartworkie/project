@@ -3,7 +3,7 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const sendEmail = require('../utilities.js')
 
-
+//Recipe Account Creation Endpoint
 const registerUser = async(req,res)=> {
     try{
     const {username, email, password} = req.body;
@@ -34,6 +34,7 @@ const registerUser = async(req,res)=> {
     }
 }
 
+//Endpoint to allow users to login
 const authenticateUser = async(req,res)=> {
     try{
     const {username, password} = req.body;
@@ -67,6 +68,7 @@ return res.status(400).json({message:error.message})
     }
 }
 
+//Endpoint to get one user
 const getOneUser = async(req,res) =>{ 
     
     try{
@@ -79,6 +81,7 @@ const getOneUser = async(req,res) =>{
     }
 }
 
+//endpoint to get all users
 const getAllUsers= async(req,res) => {
     try{
     const users = await Auth.find()
@@ -92,6 +95,7 @@ const getAllUsers= async(req,res) => {
     }
 }
 
+//endpoint to change password 
 const changePassword = async(req,res)=>{
     try{
     const {id} = req.params
@@ -118,6 +122,7 @@ catch(error){
 }
 }
 
+//endpoint to change username
 const changeUsername = async(req,res)=>{
     try{
     const {id} = req.params 
@@ -141,6 +146,7 @@ catch(error){
 }
 }
 
+//endpoint to get an email if password is forgotten
 const forgotPassword = async (req, res) =>{
     try{
     const {email} = req.body;
@@ -172,6 +178,7 @@ const forgotPassword = async (req, res) =>{
     } 
 }
 
+//Endpoint to detlete a user account 
 const deleteUser = async (req, res) => {
     try{
         const {id} = req.params 
