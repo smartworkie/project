@@ -21,7 +21,10 @@ app.listen(PORT, () =>{
 
 app.use('/api', router)
 
-
+app.use('/', (req,res)=>{
+    res.status(200).json({message:'Welcome! Here we share information on recipe. Register first or login '})
+}
+)
 app.use('*', (req,res)=>{
     res.status(404).json({message:"Wrong route/Page not found"})
 })
